@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miraculous: Yıldız Avı</title>
+    <title>Miraculous: Hesaplaşma</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #ff1744, #b71c1c);
+            background: #111;
             font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
@@ -19,145 +19,184 @@
             overflow: hidden;
             touch-action: none;
         }
-        h1 {
-            margin: 5px;
-            font-size: 24px;
-            text-shadow: 2px 2px #000;
+        #menu, #game-ui {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+        .hidden { display: none !important; }
+        h1 { color: #ffd700; margin: 5px; font-size: 22px; text-shadow: 2px 2px #ff0000; }
+        
+        /* Menü Stilleri */
+        .btn {
+            background: #ff1744; color: white; border: none; padding: 12px 25px;
+            font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin: 8px;
+            box-shadow: 0 4px #b71c1c;
+        }
+        .btn:active { transform: translateY(4px); box-shadow: 0 0 #b71c1c; }
+        input { padding: 10px; border-radius: 8px; border: none; font-size: 16px; margin: 5px; text-align: center; }
+
+        /* Oyun Alanı */
         #game-container {
-            width: 320px;
-            height: 450px;
-            background: rgba(0, 0, 0, 0.4);
+            width: 360px;
+            height: 500px;
+            background: #2e7d32;
             border: 4px solid #ffd700;
-            border-radius: 15px;
+            border-radius: 12px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
         }
+        /* Çalılar */
+        .bush {
+            position: absolute;
+            background: #1b5e20;
+            border-radius: 8px;
+            opacity: 0.85;
+        }
+        /* Karakterler */
         #player {
-            width: 50px;
-            height: 50px;
-            background: #ffeb3b;
-            border-radius: 50%;
-            position: absolute;
-            bottom: 20px;
-            left: 135px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            width: 40px; height: 40px; position: absolute;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+            transition: opacity 0.3s;
         }
-        .item {
-            width: 35px;
-            height: 35px;
-            position: absolute;
-            top: -40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
+        .bot-friend {
+            width: 40px; height: 40px; position: absolute;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
         }
-        #score {
-            font-size: 20px;
-            margin-top: 10px;
-            font-weight: bold;
-            text-shadow: 1px 1px #000;
+        .enemy {
+            width: 40px; height: 40px; position: absolute;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
         }
+        /* Kutu */
+        .box {
+            width: 35px; height: 35px; background: #8d6e63; border: 2px solid #3e2723;
+            position: absolute; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: bold; color: white; border-radius: 4px;
+        }
+        /* Kontroller */
         #controls {
-            margin-top: 15px;
-            display: flex;
-            gap: 20px;
+            margin-top: 10px; display: flex; gap: 15px;
         }
-        button.ctrl-btn {
-            background: #ffd700;
-            border: none;
-            padding: 15px 30px;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 12px;
-            color: #b71c1c;
-            box-shadow: 0 4px #ffa000;
-            cursor: pointer;
-        }
-        button.ctrl-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 #ffa000;
+        .ctrl-btn {
+            background: #ffd700; border: none; width: 60px; height: 50px;
+            font-size: 20px; font-weight: bold; border-radius: 10px; color: #b71c1c;
         }
     </style>
 </head>
 <body>
 
-    <h1>Miraculous: Yıldız Avı</h1>
-    <div id="score">Skor: 0</div>
+    <!-- GİRİŞ VE MENÜ EKRANI -->
+    <div id="menu">
+        <h1>Miraculous Hesaplaşma</h1>
+        <input type="text" id="friend-input" placeholder="Arkadaş Kullanıcı Adı">
+        <button class="btn" onclick="addFriend()">Arkadaş Ekle</button>
+        <p id="friend-status" style="color: #00e676; font-size: 14px;"></p>
 
-    <div id="game-container">
-        <div id="player">🐞</div>
+        <select id="mode-select" style="padding: 10px; border-radius: 8px; font-size: 16px; margin: 10px;">
+            <option value="solo">Tek Hesaplaşma</option>
+            <option value="duo">Çift Hesaplaşma (+ Bot Arkadaş)</option>
+        </select>
+        <button class="btn" onclick="startGame()">OYUNA BAŞLA</button>
     </div>
 
-    <div id="controls">
-        <button class="ctrl-btn" onclick="moveLeft()">◀</button>
-        <button class="ctrl-btn" onclick="moveRight()">▶</button>
+    <!-- OYUN EKRANI -->
+    <div id="game-ui" class="hidden">
+        <div style="display: flex; justify-content: space-between; width: 360px; font-size: 14px; font-weight: bold;">
+            <span id="score-display">Yük: 0 🔋</span>
+            <span id="mode-display">Mod: Tek</span>
+        </div>
+
+        <div id="game-container">
+            <!-- Çalılar -->
+            <div class="bush" style="width: 80px; height: 80px; top: 50px; left: 40px;"></div>
+            <div class="bush" style="width: 70px; height: 90px; top: 300px; left: 240px;"></div>
+            
+            <!-- Kutu -->
+            <div class="box" id="box1" style="top: 200px; left: 160px;" onclick="hitBox()">🎁10HP</div>
+
+            <!-- Karakterler -->
+            <div id="player">🐞</div>
+        </div>
+
+        <div id="controls">
+            <button class="ctrl-btn" onclick="move('left')">◀</button>
+            <button class="ctrl-btn" onclick="move('up')">▲</button>
+            <button class="ctrl-btn" onclick="move('down')">▼</button>
+            <button class="ctrl-btn" onclick="move('right')">▶</button>
+            <button class="ctrl-btn" style="background:#00e676;" onclick="attack()">💥</button>
+        </div>
     </div>
 
     <script>
-        const player = document.getElementById("player");
-        const gameContainer = document.getElementById("game-container");
-        const scoreDisplay = document.getElementById("score");
+        let playerX = 160, playerY = 400;
+        let powerCube = 0;
+        let boxHp = 10;
+        let isHidden = false;
 
-        let playerX = 135;
-        let score = 0;
-        let gameWidth = 320;
-
-        function moveLeft() {
-            playerX -= 25;
-            if (playerX < 0) playerX = 0;
-            player.style.left = playerX + "px";
+        function addFriend() {
+            let name = document.getElementById("friend-input").value;
+            if(name) {
+                document.getElementById("friend-status").innerText = name + " arkadaş olarak eklendi! ✅";
+            }
         }
 
-        function moveRight() {
-            playerX += 25;
-            if (playerX > gameWidth - 50) playerX = gameWidth - 50;
-            player.style.left = playerX + "px";
-        }
-
-        // Dokunmatik ve klavye kontrolleri
-        window.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowLeft") moveLeft();
-            if (e.key === "ArrowRight") moveRight();
-        });
-
-        function createStar() {
-            const star = document.createElement("div");
-            star.classList.add("item");
-            star.innerHTML = "⭐";
+        function startGame() {
+            let mode = document.getElementById("mode-select").value;
+            document.getElementById("menu").classList.add("hidden");
+            document.getElementById("game-ui").classList.remove("hidden");
+            document.getElementById("mode-display").innerText = mode === "duo" ? "Mod: Çift (Bot Yanında)" : "Mod: Tek";
             
-            let starX = Math.floor(Math.random() * (gameWidth - 35));
-            star.style.left = starX + "px";
-            star.style.top = "0px";
-            gameContainer.appendChild(star);
-
-            let fallInterval = setInterval(() => {
-                let starTop = parseInt(star.style.top);
-                star.style.top = (starTop + 4) + "px";
-
-                // Yakalama kontrolü
-                if (starTop > 370 && starTop < 420 && Math.abs(starX - playerX) < 35) {
-                    score += 10;
-                    scoreDisplay.innerText = "Skor: " + score;
-                    star.remove();
-                    clearInterval(fallInterval);
-                }
-
-                // Yere düşerse yok et
-                if (starTop > 450) {
-                    star.remove();
-                    clearInterval(fallInterval);
-                }
-            }, 30);
+            if(mode === "duo") {
+                let bot = document.createElement("div");
+                bot.className = "bot-friend";
+                bot.innerHTML = "🐾"; // Chat Noir Bot
+                bot.style.left = (playerX + 40) + "px";
+                bot.style.top = playerY + "px";
+                document.getElementById("game-container").appendChild(bot);
+            }
         }
 
-        setInterval(createStar, 1000);
+        function move(dir) {
+            if(dir === 'left') playerX -= 15;
+            if(dir === 'right') playerX += 15;
+            if(dir === 'up') playerY -= 15;
+            if(dir === 'down') playerY += 15;
+
+            // Sınırlar
+            if(playerX < 0) playerX = 0;
+            if(playerX > 320) playerX = 320;
+            if(playerY < 0) playerY = 0;
+            if(playerY > 460) playerY = 460;
+
+            let p = document.getElementById("player");
+            p.style.left = playerX + "px";
+            p.style.top = playerY + "px";
+
+            // Çalı kontrolü (Basit koordinat kontrolü)
+            if(playerX > 30 && playerX < 130 && playerY > 40 && playerY < 140) {
+                p.style.opacity = "0.3"; // Çalı içindeyken görünmezlik
+                isHidden = true;
+            } else {
+                p.style.opacity = "1";
+                isHidden = false;
+            }
+        }
+
+        function hitBox() {
+            boxHp -= (1 + powerCube);
+            let box = document.getElementById("box1");
+            if(boxHp <= 0) {
+                box.remove();
+                powerCube++;
+                document.getElementById("score-display").innerText = "Yük: " + powerCube + " 🔋";
+            } else {
+                box.innerText = boxHp + "HP";
+            }
+        }
+
+        function attack() {
+            alert("Süper güç ve saldırı efekti kullanıldı! Akumalı hedeflere hasar verildi ⚡");
+        }
     </script>
 </body>
 </html>
