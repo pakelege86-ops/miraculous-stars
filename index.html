@@ -2,293 +2,1037 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miraculous: Brawl Stars</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Miraculous Stars - 30 Karakter & Ses Efektleri</title>
     <style>
+        * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
         body {
-            margin: 0; padding: 0; background: #0b0f19;
-            font-family: 'Arial', sans-serif; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            height: 100vh; color: white; overflow: hidden; touch-action: none;
+            margin: 0; padding: 0; overflow: hidden;
+            background-color: #1a001a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff; touch-action: none;
         }
-        .screen { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 400px; }
-        .hidden { display: none !important; }
-        h1 { color: #facc15; margin: 5px; font-size: 22px; text-shadow: 2px 2px #ef4444; text-align: center; }
-        
-        .btn {
-            background: #ef4444; color: white; border: none; padding: 12px 24px;
-            font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; margin: 6px;
-            box-shadow: 0 4px #b91c1c; width: 85%; text-align: center;
-        }
-        .btn:active { transform: translateY(4px); box-shadow: 0 0 #b91c1c; }
-        input { padding: 10px; border-radius: 8px; border: none; font-size: 15px; margin: 5px; text-align: center; width: 80%; background: #1e293b; color: white; }
 
+        .screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 100; padding: 20px; background: linear-gradient(135deg, #33001a 0%, #0d0d1a 100%);
+        }
+
+        #splash-screen { background: #110005; z-index: 9999; transition: opacity 0.5s ease; }
+        .brawl-logo {
+            font-size: 2.8rem; font-weight: 900; font-style: italic; color: #ff3333;
+            text-shadow: 4px 4px 0px #000, -2px -2px 0px #ffcc00;
+            text-align: center; letter-spacing: 2px;
+            animation: pulse-logo 1.5s infinite alternate;
+        }
+        @keyframes pulse-logo { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+
+        #login-screen { z-index: 5000; display: none; }
+        .input-box {
+            padding: 14px 20px; font-size: 1.1rem; border-radius: 12px; border: 3px solid #ff3333;
+            background: rgba(0,0,0,0.8); color: white; text-align: center; width: 85%; max-width: 320px;
+            margin-bottom: 15px; outline: none; font-weight: bold;
+        }
+
+        #menu-screen { justify-content: space-between; display: none; z-index: 10; padding: 15px; }
+        .menu-header {
+            width: 100%; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 12px;
+            border: 2px solid #ff3333; box-shadow: inset 0 0 10px rgba(255,0,0,0.2);
+        }
+        .currency-row { display: flex; gap: 15px; font-weight: bold; margin-top: 2px; font-size: 0.95rem; }
+        .trophy-text { color: #ffcc00; }
+        .gem-text { color: #00ffff; }
+        .coin-text { color: #ff9900; }
+
+        .brawler-preview-card {
+            background: linear-gradient(180deg, rgba(60,20,30,0.9) 0%, rgba(15,5,10,0.95) 100%);
+            border: 3px solid #ff3333; border-radius: 20px;
+            padding: 15px; text-align: center; width: 100%; max-width: 340px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; cursor: pointer;
+        }
+
+        .menu-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 340px; }
+        .menu-btn {
+            background: linear-gradient(135deg, #cc0000, #660000);
+            border: 2px solid #ff9999; color: white; padding: 10px; font-size: 0.75rem;
+            font-weight: 900; border-radius: 12px; cursor: pointer;
+            box-shadow: 0 4px 0 #330000; text-transform: uppercase;
+        }
+        .menu-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #330000; }
+
+        .play-btn {
+            background: linear-gradient(180deg, #ff3333 0%, #990000 100%);
+            border: 3px solid #ffcc00; color: #fff; padding: 14px; font-size: 1.3rem;
+            font-weight: 900; font-style: italic; border-radius: 35px; cursor: pointer; width: 100%; max-width: 340px;
+            box-shadow: 0 6px 0 #4d0000, 0 10px 20px rgba(255, 51, 51, 0.5); text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .play-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #4d0000; }
+
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: none; z-index: 6000; flex-direction: column; align-items: center; padding-top: 20px;
+        }
+        .modal-content-box { width: 100%; max-width: 420px; max-height: 65vh; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+
+        .friend-item, .trophy-road-item {
+            background: rgba(255,255,255,0.05); border: 2px solid #444; border-radius: 12px;
+            padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .friend-item.online { border-color: #00ffcc; background: rgba(0,255,204,0.06); }
         .skin-card {
-            background: #1e293b; border: 2px solid #334155; border-radius: 12px;
-            padding: 10px; margin: 6px; width: 85%; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+            background: rgba(255,255,255,0.07); border: 2px solid #555; border-radius: 15px;
+            padding: 10px; text-align: center; cursor: pointer; position: relative;
         }
-        .skin-card.selected { border-color: #facc15; background: #334155; }
+        .skin-card.selected { border-color: #00ffcc; background: rgba(0,255,204,0.15); box-shadow: 0 0 10px #00ffcc; }
+        .skin-card.locked { opacity: 0.5; }
 
-        /* BRAWL STARS HARİTA ALANI */
-        #game-container {
-            width: 360px; height: 460px; background: #2e1065;
-            border: 4px solid #facc15; border-radius: 16px;
-            position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+        .brawler-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 400px; max-height: 65vh; overflow-y: auto; padding: 5px;
         }
-        .wall {
-            position: absolute; background: #6b21a8; border: 2px solid #581c87; border-radius: 4px;
+        .brawler-card {
+            background: rgba(255,255,255,0.07); border: 2px solid #555; border-radius: 12px;
+            padding: 6px; text-align: center; cursor: pointer; position: relative;
         }
-        .bush {
-            position: absolute; background: #166534; border-radius: 8px; opacity: 0.95;
+        .brawler-card.selected { border-color: #00ffcc; background: rgba(0,255,204,0.15); box-shadow: 0 0 10px #00ffcc; }
+        .brawler-card.locked { opacity: 0.4; }
+        .brawler-card span { font-size: 1.8rem; display: block; }
+        .brawler-card p { margin: 3px 0 0 0; font-size: 0.65rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lock-badge { position: absolute; top: 3px; right: 3px; font-size: 0.65rem; }
+
+        .mode-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 340px; }
+        .mode-card {
+            background: rgba(255,255,255,0.08); border: 2px solid #555; border-radius: 12px;
+            padding: 12px; text-align: center; cursor: pointer; font-weight: bold;
         }
-        .entity {
-            width: 34px; height: 34px; position: absolute;
-            display: flex; align-items: center; justify-content: center; font-size: 20px;
-            transition: opacity 0.2s;
+        .mode-card.selected { border-color: #ffcc00; background: rgba(255,204,0,0.15); }
+
+        .box-container { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; width: 100%; max-width: 360px; }
+        .box-card {
+            background: linear-gradient(135deg, #440011, #220008); border: 3px solid #ff3333;
+            border-radius: 15px; padding: 12px; text-align: center; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; justify-content: space-between; align-items: center;
         }
-        .box {
-            width: 30px; height: 30px; background: #78350f; border: 2px solid #451a03;
-            position: absolute; display: flex; align-items: center; justify-content: center;
-            font-size: 9px; font-weight: bold; color: white; border-radius: 4px; cursor: pointer;
+        .box-card.mega { border-color: #ffcc00; background: linear-gradient(135deg, #552200, #331100); }
+        .box-card.free { border-color: #00ffcc; background: linear-gradient(135deg, #003322, #001111); }
+
+        #super-cinematic {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.85); pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-        .projectile {
-            width: 10px; height: 10px; background: #facc15; border-radius: 50%;
-            position: absolute; box-shadow: 0 0 8px #facc15;
+        .cinematic-box {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            animation: cinematic-zoom 1.2s forwards;
+            border: 4px solid #ffcc00; background: radial-gradient(circle, #550022 0%, #110005 100%);
+            padding: 30px 50px; border-radius: 30px; box-shadow: 0 0 50px #ff3333;
         }
-        #controls-area {
-            margin-top: 8px; display: flex; width: 360px; justify-content: space-between; align-items: center; padding: 0 5px;
+        @keyframes cinematic-zoom {
+            0% { transform: scale(0.3); opacity: 0; filter: blur(10px); }
+            50% { transform: scale(1.15); opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1); opacity: 1; }
         }
-        .d-pad { display: grid; grid-template-columns: repeat(3, 44px); gap: 3px; }
-        .ctrl-btn {
-            background: rgba(250, 204, 21, 0.3); border: 2px solid #facc15; width: 44px; height: 44px;
-            font-size: 16px; font-weight: bold; border-radius: 10px; color: white;
-            display: flex; align-items: center; justify-content: center;
+        .cinematic-icon { font-size: 5rem; animation: bounce-icon 0.6s infinite alternate; }
+        @keyframes bounce-icon { 0% { transform: translateY(0); } 100% { transform: translateY(-15px); } }
+        .cinematic-title { font-size: 1.8rem; font-weight: 900; font-style: italic; color: #ffcc00; margin-top: 10px; text-shadow: 2px 2px #000; text-align: center; }
+        .cinematic-desc { font-size: 0.95rem; color: #00ffff; margin-top: 5px; font-weight: bold; text-align: center; }
+
+        #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; display: none; background: #2c1638; }
+        #ui-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; display: flex; flex-direction: column;
+            justify-content: space-between; padding: 15px; display: none; z-index: 5;
         }
-        .ctrl-btn:active { background: rgba(250, 204, 21, 0.7); }
-        .action-btns { display: flex; gap: 12px; align-items: center; }
-        .attack-btn { background: #ef4444; color: white; width: 62px; height: 62px; border-radius: 50%; font-size: 24px; border: 3px solid #f87171; box-shadow: 0 4px #991b1b; }
-        .super-btn { background: #eab308; color: white; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; border: 3px solid #fef08a; box-shadow: 0 3px #854d0e; }
+        .interactive { pointer-events: auto; }
+
+        .brawl-hud-top {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.8); padding: 8px 15px; border-radius: 15px;
+            border: 2px solid #ff3333; font-size: 0.9rem;
+        }
+        .health-bar-container {
+            width: 120px; height: 14px; background: #444; border-radius: 7px; overflow: hidden; border: 2px solid #fff; margin-top: 4px; position: relative;
+        }
+        .health-bar-fill { width: 100%; height: 100%; background: #00ffcc; transition: width 0.1s linear; }
+        .health-text {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            font-size: 0.65rem; font-weight: 900; color: #000; text-align: center; line-height: 10px;
+        }
+
+        #controls { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
+        #joystick-zone {
+            width: 120px; height: 120px; background: rgba(255,255,255,0.08);
+            border: 3px solid rgba(255,255,255,0.2); border-radius: 50%; position: relative;
+        }
+        #joystick-knob {
+            width: 50px; height: 50px; background: rgba(255, 51, 51, 0.85);
+            border: 2px solid #fff; border-radius: 50%; position: absolute; top: 32px; left: 32px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .action-buttons { display: flex; gap: 15px; align-items: flex-end; }
+        .brawl-btn {
+            border-radius: 50%; border: 4px solid #fff; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.6); font-weight: 900; color: white;
+        }
+        #attack-btn { width: 80px; height: 80px; background: linear-gradient(135deg, #ff3333, #990000); font-size: 1.8rem; }
+        #super-btn { width: 95px; height: 95px; background: #333; border-color: #555; opacity: 0.4; pointer-events: none; font-size: 0.85rem; text-align: center; }
+        #super-btn.ready { background: linear-gradient(135deg, #ffcc00, #ff3333); border-color: #00ffff; opacity: 1; pointer-events: auto; box-shadow: 0 0 20px #ffcc00; }
     </style>
 </head>
 <body>
 
+    <div id="super-cinematic">
+        <div class="cinematic-box">
+            <div class="cinematic-icon" id="cine-icon">🐞</div>
+            <div class="cinematic-title" id="cine-title">ÖZEL YETENEK!</div>
+            <div class="cinematic-desc" id="cine-desc">Süper Güç Devrede!</div>
+        </div>
+    </div>
+
+    <div id="splash-screen" class="screen" onclick="proceedToLogin()">
+        <div class="brawl-logo">MIRACULOUS<br>STARS</div>
+        <p style="color:#aaa; margin-top:30px; font-size:0.85rem; letter-spacing:1px;">GİRİŞ İÇİN EKRANA DOKUN</p>
+    </div>
+
+    <div id="login-screen" class="screen">
+        <div class="brawl-logo" style="font-size:2.2rem; margin-bottom:10px;">KAYIT & GİRİŞ</div>
+        <p style="color:#aaa; margin-bottom:15px; text-align:center; font-size:0.9rem;">Kahraman adını yaz, ID'n otomatik oluşsun!</p>
+        <input type="text" id="username-input" class="input-box interactive" placeholder="Kahraman Adı" maxlength="12" value="Ladybug">
+        <button id="start-game-btn" class="play-btn interactive" style="width:220px; font-size:1.1rem; padding:12px; margin-top:5px;">OYNA</button>
+    </div>
+
     <div id="menu-screen" class="screen">
-        <h1>Miraculous: Hesaplaşma</h1>
-        <input type="text" id="friend-input" placeholder="Arkadaşının Kullanıcı Adı">
-        <button class="btn" onclick="addFriend()">Arkadaş Ekle</button>
-        <p id="friend-status" style="color: #4ade80; font-size: 13px; margin: 2px;"></p>
-
-        <select id="mode-select" style="padding: 10px; border-radius: 8px; font-size: 15px; margin: 8px; width: 85%; background: #1e293b; color: white;">
-            <option value="solo">Tek Hesaplaşma</option>
-            <option value="duo">Çift Hesaplaşma (+ Chat Noir Bot)</option>
-        </select>
-        <button class="btn" style="background:#22c55e; box-shadow: 0 4px #15803d;" onclick="goToSkinSelect()">DEVAM ET</button>
-    </div>
-
-    <div id="skin-screen" class="screen hidden">
-        <h1>Miraculous Karakteri Seç</h1>
-        <div class="skin-card selected" onclick="selectSkin('🐞', 0, this)">
-            <span>🐞 Ladybug (Klasik)</span>
-            <span>Ücretsiz</span>
-        </div>
-        <div class="skin-card" onclick="selectSkin('🐅', 29, this)">
-            <span>🐅 Kaplan Böcek</span>
-            <span>29 💎</span>
-        </div>
-        <div class="skin-card" onclick="selectSkin('🐈‍⬛', 149, this)">
-            <span>🐈‍⬛ Cat Walker</span>
-            <span>149 💎</span>
-        </div>
-        <button class="btn" style="background:#3b82f6; box-shadow: 0 4px #1d4ed8; margin-top: 15px;" onclick="startGame()">OYUNA BAŞLA</button>
-    </div>
-
-    <div id="game-screen" class="screen hidden">
-        <div style="display: flex; justify-content: space-between; width: 360px; font-size: 13px; font-weight: bold; margin-bottom: 4px;">
-            <span id="score-display">Kalan savaşçı: 10 | Yük: 0 🔋</span>
-            <span id="mode-label" style="color: #facc15;">Tek</span>
-        </div>
-
-        <div id="game-container">
-            <div class="wall" style="width: 50px; height: 30px; top: 80px; left: 40px;"></div>
-            <div class="wall" style="width: 30px; height: 60px; top: 150px; left: 200px;"></div>
-            <div class="wall" style="width: 70px; height: 25px; top: 300px; left: 100px;"></div>
-
-            <div class="bush" style="width: 90px; height: 80px; top: 30px; left: 20px;"></div>
-            <div class="bush" style="width: 100px; height: 90px; top: 330px; left: 230px;"></div>
-            
-            <div class="box" id="box1" style="top: 210px; left: 164px;" onclick="hitBox()">15HP</div>
-
-            <div class="entity" id="enemy" style="top: 30px; left: 300px;" title="Akumalı">🦹‍♂️</div>
-
-            <div class="entity" id="player" style="top: 400px; left: 160px;">🐞</div>
-        </div>
-
-        <div id="controls-area">
-            <div class="d-pad">
-                <div></div><button class="ctrl-btn" onclick="move('up')">▲</button><div></div>
-                <button class="ctrl-btn" onclick="move('left')">◀</button>
-                <button class="ctrl-btn" onclick="move('down')">▼</button>
-                <button class="ctrl-btn" onclick="move('right')">▶</button>
+        <div class="menu-header interactive">
+            <div>
+                <h3 id="display-name" style="margin:0; color:#00ffcc; font-size:1.0rem;">Ladybug</h3>
+                <div style="font-size:0.75rem; color:#aaa;" id="display-id">ID: #MS-8842</div>
+                <div class="currency-row">
+                    <span class="trophy-text">🏆 <span id="player-trophies">0</span></span>
+                    <span class="gem-text">💎 <span id="player-gems">50</span></span>
+                    <span class="coin-text">🪙 <span id="player-coins">300</span></span>
+                </div>
             </div>
-            <div class="action-btns">
-                <button class="super-btn" onclick="useSuper()">⚡</button>
-                <button class="attack-btn" onclick="attack()">🔴</button>
+            <div style="font-size: 0.75rem; background:#331111; padding:4px 8px; border-radius:6px; border:1px solid #ff3333; cursor:pointer;" onclick="resetAccountData()">Sıfırla ⚙️</div>
+        </div>
+
+        <div class="brawler-preview-card interactive" onclick="openBrawlerSelect()">
+            <div style="font-size: 3.2rem; text-shadow: 0 0 15px rgba(255,51,51,0.5);" id="selected-icon">🐞</div>
+            <h2 id="selected-name" style="margin:6px 0 2px 0; color:#ff3333; font-size:1.3rem;">Ladybug</h2>
+            <div style="font-size: 0.7rem; color:#00ffff;" id="selected-role">Rol: Ana Kahraman</div>
+            <div style="font-size: 0.65rem; color:#aaa; margin-top:2px;">Karakter değiştirmek için dokun 👥</div>
+        </div>
+
+        <div class="menu-buttons-grid">
+            <button class="menu-btn interactive" onclick="openBrawlerSelect()">👥 Karakterler (30)</button>
+            <button class="menu-btn interactive" onclick="openModeSelect()">🎮 Oyun Modu</button>
+            <button class="menu-btn interactive" onclick="openFriendsModal()">👥 Arkadaşlar</button>
+            <button class="menu-btn interactive" onclick="openBoxModal()" style="background: linear-gradient(135deg, #cc0066, #660033); border-color:#ff00ff;">🛒 Market & Kutular</button>
+        </div>
+
+        <button class="play-btn interactive" onclick="startMatch()">SAVAŞ!</button>
+    </div>
+
+    <!-- ARKADAŞLAR MODALI -->
+    <div id="friends-modal" class="modal">
+        <h2 style="color:#ffcc00; margin:5px 0; font-style:italic;">ARKADAŞLAR VE PARTİ</h2>
+        <p style="color:#aaa; font-size:0.8rem; text-align:center; margin:0 10px;">Rastgele arkadaşlar ekle, birlikte maça gir!</p>
+        <div class="modal-content-box" id="friends-container"></div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button class="menu-btn interactive" style="background:#00aa66; border-color:#00ffcc;" onclick="addRandomFriend()">➕ Rastgele Arkadaş Ekle</button>
+            <button class="menu-btn interactive" style="background:#cc2222; border-color:#ff3333;" onclick="closeFriendsModal()">KAPAT</button>
+        </div>
+    </div>
+
+    <div id="mode-select-modal" class="modal">
+        <h2 style="color:#ffcc00; margin:5px 0; font-style:italic;">OYUN MODLARI</h2>
+        <div class="modal-content-box" style="align-items:center;">
+            <div class="mode-grid" id="mode-grid-container"></div>
+        </div>
+        <button class="menu-btn interactive" style="width:200px; margin-top:15px; background:#cc2222; border-color:#ff3333;" onclick="closeModeSelect()">KAPAT</button>
+    </div>
+
+    <!-- 30 KARAKTER SEÇİM MODALI -->
+    <div id="brawler-select-modal" class="modal">
+        <h2 style="color:#ffcc00; margin:5px 0; font-style:italic;">30 MİRACULOUS KARAKTERİ</h2>
+        <div class="brawler-grid" id="brawler-grid-container"></div>
+        <button class="menu-btn interactive" style="width:100%; max-width:400px; margin-top:15px; background:#cc2222; border-color:#ff3333;" onclick="closeBrawlerSelect()">KAPAT</button>
+    </div>
+
+    <!-- MARKET & KUTULAR MODALI -->
+    <div id="box-modal" class="modal">
+        <h2 style="color:#ffcc00; margin:5px 0; font-style:italic;">MARKET & KUTULAR 🛒</h2>
+        <div class="modal-content-box" style="align-items:center;">
+            
+            <div style="background: rgba(255,215,0,0.1); border: 2px dashed #ffcc00; border-radius: 15px; padding: 12px; width: 100%; max-width: 360px; text-align: center;">
+                <h4 style="margin:0 0 5px 0; color:#ffcc00;">✨ GÜNÜN ÖZEL TEKLİFİ ✨</h4>
+                <div id="daily-offer-content" style="font-size: 0.9rem; margin-bottom: 8px;">Yükleniyor...</div>
+                <div id="daily-offer-btn-container"></div>
+            </div>
+
+            <div class="box-container">
+                <div class="box-card free interactive" id="free-box-card" onclick="openFreeBox()">
+                    <div>
+                        <div style="font-size: 2rem;">🎁</div>
+                        <h4 style="margin:5px 0; color:#00ffcc;">Günlük Bedava Kutu</h4>
+                        <p style="color:#aaa; font-size:0.75rem; margin:0;" id="free-box-status">Her gün ücretsiz altın & elmas!</p>
+                    </div>
+                    <button class="menu-btn interactive" style="background:#00aa66; border-color:#00ffcc; padding:8px 12px;" id="free-box-btn">AL</button>
+                </div>
+
+                <div class="box-card interactive" onclick="openBox('brawl')">
+                    <div>
+                        <div style="font-size: 2rem;">📦</div>
+                        <h4 style="margin:5px 0; color:#ffcc00;">Normal Kutu</h4>
+                        <p style="color:#00ffff; font-size:0.75rem; margin:0;">100 🪙</p>
+                    </div>
+                    <span style="font-size: 1.2rem; color:#ffcc00;">Satın Al ➡️</span>
+                </div>
+
+                <div class="box-card mega interactive" onclick="openBox('mega')">
+                    <div>
+                        <div style="font-size: 2rem;">🎁</div>
+                        <h4 style="margin:5px 0; color:#ffcc00;">Akuma Kutusu (Yeni Karakter Çıkabilir!)</h4>
+                        <p style="color:#00ffff; font-size:0.75rem; margin:0;">80 💎</p>
+                    </div>
+                    <span style="font-size: 1.2rem; color:#ffcc00;">Satın Al ➡️</span>
+                </div>
+            </div>
+            
+            <h3 id="box-result" style="color:#00ffcc; margin-top:5px; min-height:25px; text-align:center; padding:0 10px; font-size:0.9rem;"></h3>
+        </div>
+        <button class="menu-btn interactive" style="width:200px; margin-top:10px; background:#cc2222; border-color:#ff3333;" onclick="closeBoxModal()">GERİ DÖN</button>
+    </div>
+
+    <canvas id="game-canvas"></canvas>
+    <div id="ui-container">
+        <div class="brawl-hud-top interactive">
+            <div>
+                <strong>Mod:</strong> <span id="current-mode-title" style="color:#ffcc00;">Elmas Kapmaca</span>
+                <div class="health-bar-container">
+                    <div id="player-hp-fill" class="health-bar-fill"></div>
+                    <div id="player-hp-text" class="health-text">3400/3400</div>
+                </div>
+            </div>
+            <div id="hud-score" style="color:#00ffff; font-weight:bold;">Hedef: 10 Elmas</div>
+            <div id="hud-timer" style="color:#ffcc00; font-weight:bold; display:none;">Süre: 15s</div>
+            <div onclick="returnToMenu()" style="cursor:pointer; color:#ff3333; font-weight:900; padding:4px 10px; background:rgba(0,0,0,0.5); border-radius:8px;">ÇIKIŞ ❌</div>
+        </div>
+
+        <div id="controls">
+            <div id="joystick-zone" class="interactive"><div id="joystick-knob"></div></div>
+            <div class="action-buttons">
+                <div id="super-btn" class="brawl-btn interactive" onclick="useSuper()">SÜPER</div>
+                <div id="attack-btn" class="brawl-btn interactive" onclick="useAttack()">🗡️</div>
             </div>
         </div>
     </div>
 
     <script>
-        let selectedSkinIcon = '🐞';
-        let playerX = 160, playerY = 400;
-        let enemyX = 300, enemyY = 30;
-        let powerCube = 0;
-        let playerHp = 100;
-        let boxHp = 15;
-        let isHidden = false;
-        let duoMode = false;
-        let botObj = null;
-        let brawlersLeft = 10;
+        // ----------------------------------------------------
+        // SES EFEKTLERİ SİSTEMİ (Web Audio API - Harici dosya gerektirmez)
+        // ----------------------------------------------------
+        let audioCtx = null;
 
-        function addFriend() {
-            let name = document.getElementById("friend-input").value;
-            if(name) {
-                document.getElementById("friend-status").innerText = name + " arkadaş eklendi! ✅";
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
-        function goToSkinSelect() {
-            let mode = document.getElementById("mode-select").value;
-            duoMode = (mode === "duo");
-            document.getElementById("menu-screen").classList.add("hidden");
-            document.getElementById("skin-screen").classList.remove("hidden");
+        function playSoundEffect(type) {
+            initAudio();
+            if (!audioCtx) return;
+
+            let osc = audioCtx.createOscillator();
+            let gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            let now = audioCtx.currentTime;
+
+            if (type === 'lucky_charm') { // Parlak sihirli çan sesi
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, now); // D5
+                osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.3);
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } 
+            else if (type === 'cataclysm') { // Derin yıkım gümbürtüsü
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(30, now + 0.5);
+                gainNode.gain.setValueAtTime(0.4, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                osc.start(now);
+                osc.stop(now + 0.5);
+            }
+            else if (type === 'laser' || type === 'shoot') { // Atış / Lazer sesi
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+            }
+            else if (type === 'hit') { // Hasar alma sesi
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(120, now);
+                osc.frequency.linearRampToValueAtTime(40, now + 0.1);
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            }
+            else if (type === 'super_ready') { // Süper dolunca çıkan jingle
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                osc.frequency.setValueAtTime(880, now + 0.2);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.35);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            }
+            else { // Varsayılan genel vuruş
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            }
         }
 
-        function selectSkin(icon, price, element) {
-            selectedSkinIcon = icon;
-            document.querySelectorAll('.skin-card').forEach(c => c.classList.remove('selected'));
-            element.classList.add('selected');
-        }
-
-        function startGame() {
-            document.getElementById("skin-screen").classList.add("hidden");
-            document.getElementById("game-screen").classList.remove("hidden");
-            document.getElementById("mode-label").innerText = duoMode ? "Çift" : "Tek";
+        // ----------------------------------------------------
+        // 30 KARAKTERLİ LİSTE
+        // ----------------------------------------------------
+        const brawlers = [
+            { id: 'ladybug', name: 'Ladybug', icon: '🐞', role: 'Ana Kahraman', unlocked: true, hp: 3400, damage: 1100, superDamage: 2500, cineTitle: 'LADYBUG: ŞANSLI TILSIM!', cineIcon: '🐞', helper: 'Cat Noir 🐱', ammoType: 'yo-yo', sound: 'lucky_charm' },
+            { id: 'catnoir', name: 'Cat Noir', icon: '🐱', role: 'Ana Kahraman', unlocked: true, hp: 3800, damage: 1300, superDamage: 3000, cineTitle: 'CAT NOIR: KEDİ KLİZMASI!', cineIcon: '🐱', helper: 'Ladybug 🐞', ammoType: 'claw', sound: 'cataclysm' },
+            { id: 'rena', name: 'Rena Rouge', icon: '🦊', role: 'Destek', unlocked: false, hp: 3000, damage: 950, superDamage: 2200, cineTitle: 'RENA ROUGE: İLLÜZYON!', cineIcon: '🦊', helper: 'Trixx ✨', ammoType: 'flute', sound: 'laser' },
+            { id: 'carapace', name: 'Carapace', icon: '🐢', role: 'Tank', unlocked: false, hp: 5000, damage: 800, superDamage: 1800, cineTitle: 'CARAPACE: KABUK KALKANI!', cineIcon: '🐢', helper: 'Wayzz 🟢', ammoType: 'shield', sound: 'hit' },
+            { id: 'viperion', name: 'Viperion', icon: '🐍', role: 'Taktikçi', unlocked: false, hp: 3200, damage: 1000, superDamage: 2400, cineTitle: 'VIPERION: İKİNCİ ŞANS!', cineIcon: '🐍', helper: 'Sass ⌛', ammoType: 'lyre', sound: 'lucky_charm' },
+            { id: 'queenbee', name: 'Queen Bee', icon: '🐝', role: 'Suikastçı', unlocked: false, hp: 2900, damage: 1200, superDamage: 2600, cineTitle: 'QUEEN BEE: ZETRİ İĞNE!', cineIcon: '🐝', helper: 'Pollen ⚡', ammoType: 'top', sound: 'laser' },
+            { id: 'pegasus', name: 'Pegasus', icon: '🐴', role: 'Hızlı', unlocked: false, hp: 3100, damage: 900, superDamage: 2100, cineTitle: 'PEGASUS: IŞINLANMA!', cineIcon: '🐴', helper: 'Kaalki 🌀', ammoType: 'horseshoe', sound: 'laser' },
+            { id: 'monkey', name: 'King Monkey', icon: '🐵', role: 'Savaşçı', unlocked: false, hp: 4200, damage: 1050, superDamage: 2300, cineTitle: 'KAOS NÜVSESİ!', cineIcon: '🐵', helper: 'Xuppu 🍌', ammoType: 'staff', sound: 'cataclysm' },
+            { id: 'ryuko', name: 'Ryuko', icon: '⚔️', role: 'Kılıç Ustası', unlocked: false, hp: 3600, damage: 1400, superDamage: 2900, cineTitle: 'ELEMENTAL GÜÇ!', cineIcon: '⚔️', helper: 'Longg 🐉', ammoType: 'sword', sound: 'hit' },
+            { id: 'pigella', name: 'Pigella', icon: '🐷', role: 'Şifacı', unlocked: false, hp: 3300, damage: 850, superDamage: 2000, cineTitle: 'HEDİYE ARMAĞANI!', cineIcon: '🐷', helper: 'Daizzi 🌸', ammoType: 'harp', sound: 'lucky_charm' },
             
-            let p = document.getElementById("player");
-            p.innerText = selectedSkinIcon;
+            { id: 'tikki', name: 'Tikki', icon: '✨', role: 'Kwami', unlocked: false, hp: 2500, damage: 1150, superDamage: 2700, cineTitle: ' MUCİZEİ ENERJİ!', cineIcon: '✨', helper: 'Marinette', ammoType: 'spark', sound: 'lucky_charm' },
+            { id: 'plagg', name: 'Plagg', icon: '🧀', role: 'Kwami', unlocked: false, hp: 2700, damage: 1500, superDamage: 3200, cineTitle: ' PEYNİR PATLAMASI!', cineIcon: '🧀', helper: 'Adrien', ammoType: 'cheese', sound: 'cataclysm' },
+            { id: 'wayzz', name: 'Wayzz', icon: '🟢', role: 'Kwami', unlocked: false, hp: 4500, damage: 700, superDamage: 1500, cineTitle: ' BİLGE KALKAN!', cineIcon: '🟢', helper: 'Nino', ammoType: 'shell', sound: 'hit' },
+            { id: 'trixx', name: 'Trixx', icon: '🦊', role: 'Kwami', unlocked: false, hp: 2600, damage: 900, superDamage: 2100, cineTitle: ' ALdatMA KANADI!', cineIcon: '🦊', helper: 'Alya', ammoType: 'tail', sound: 'laser' },
+            { id: 'pollen', name: 'Pollen', icon: '👑', role: 'Kwami', unlocked: false, hp: 2400, damage: 1000, superDamage: 2300, cineTitle: ' VIZILTI DALGASI!', cineIcon: '👑', helper: 'Chloe', ammoType: 'stinger', sound: 'laser' },
+            { id: 'nooroo', name: 'Nooroo', icon: '🦋', role: 'Kwami', unlocked: false, hp: 2800, damage: 1100, superDamage: 2500, cineTitle: ' KELEBEK EFİNDİ!', cineIcon: '🦋', helper: 'Hawkmoth', ammoType: 'moth', sound: 'lucky_charm' },
+            { id: 'duusu', name: 'Duusu', icon: '🦚', role: 'Kwami', unlocked: false, hp: 2700, damage: 1250, superDamage: 2800, cineTitle: ' TAVUS KUŞU GÖZÜ!', cineIcon: '🦚', helper: 'Mayura', ammoType: 'feather', sound: 'cataclysm' },
+            { id: 'fluff', name: 'Fluff', icon: '⏰', role: 'Kwami', unlocked: false, hp: 2600, damage: 950, superDamage: 2200, cineTitle: ' ZAMAN BÜKÜMÜ!', cineIcon: '⏰', helper: 'Alix', ammoType: 'clock', sound: 'lucky_charm' },
+            { id: 'kaalki', name: 'Kaalki', icon: '🦄', role: 'Kwami', unlocked: false, hp: 3000, damage: 1000, superDamage: 2400, cineTitle: ' PORTAL AÇILIŞI!', cineIcon: '🦄', helper: 'Max', ammoType: 'portal', sound: 'laser' },
+            { id: 'xuppu', name: 'Xuppu', icon: '🍊', role: 'Kwami', unlocked: false, hp: 2900, damage: 1050, superDamage: 2350, cineTitle: ' KAOS ŞAKASI!', cineIcon: '🍊', helper: 'Kim', ammoType: 'banana', sound: 'cataclysm' },
 
-            if(duoMode) {
-                botObj = document.createElement("div");
-                botObj.className = "entity";
-                botObj.innerHTML = "🐾";
-                botObj.style.left = (playerX + 40) + "px";
-                botObj.style.top = playerY + "px";
-                document.getElementById("game-container").appendChild(botObj);
-            }
+            { id: 'hawkmoth', name: 'Monarch', icon: '🦋', role: 'Kötü Karakter', unlocked: false, hp: 4000, damage: 1350, superDamage: 3100, cineTitle: 'AKUMA SALDIRISI!', cineIcon: '🦋', helper: 'Akumatize Ordu', ammoType: 'evil', sound: 'cataclysm' },
+            { id: 'mayura', name: 'Mayura', icon: '🦚', role: 'Kötü Karakter', unlocked: false, hp: 3500, damage: 1200, superDamage: 2900, cineTitle: 'SENTİCANAVAR!', cineIcon: '🦚', helper: 'Moth Minyon', ammoType: 'feather_dark', sound: 'lucky_charm' },
+            { id: 'volpina', name: 'Volpina', icon: '🦊', role: 'Kötü Karakter', unlocked: false, hp: 3100, damage: 1100, superDamage: 2500, cineTitle: 'YALAN İLLÜZYONU!', cineIcon: '🦊', helper: 'Sahte Klone', ammoType: 'flute_dark', sound: 'laser' },
+            { id: 'stormy', name: 'Fırtınalı Hava', icon: '⚡', role: 'Akuma', unlocked: false, hp: 3300, damage: 1250, superDamage: 2800, cineTitle: 'YILDIRIM FIRTINASI!', cineIcon: '⚡', helper: 'Bulut Gücü', ammoType: 'lightning', sound: 'hit' },
+            { id: 'copycat', name: 'Kopyacı', icon: '🐾', role: 'Akuma', unlocked: false, hp: 3700, damage: 1200, superDamage: 2700, cineTitle: 'SAHTE PENÇE!', cineIcon: '🐾', helper: 'Kedi Taklit', ammoType: 'claw_fake', sound: 'cataclysm' },
+            { id: 'antibug', name: 'Antibug', icon: '🐞', role: 'Akuma', unlocked: false, hp: 3500, damage: 1300, superDamage: 2900, cineTitle: 'ANTİ-TILSIM!', cineIcon: '🐞', helper: 'Karanlık Yo-Yo', ammoType: 'yoyo_dark', sound: 'lucky_charm' },
+            { id: 'glaciator', name: 'Glaciator', icon: '🍨', role: 'Akuma', unlocked: false, hp: 5500, damage: 900, superDamage: 2100, cineTitle: 'DEV DONDURMA!', cineIcon: '🍨', helper: 'Dondurma Topu', ammoType: 'icecream', sound: 'hit' },
+            { id: 'gamer', name: 'Gamer', icon: '🎮', role: 'Akuma', unlocked: false, hp: 3200, damage: 1150, superDamage: 2650, cineTitle: 'RETRO LAZER!', cineIcon: '🎮', helper: 'Robot Mech', ammoType: 'pixel', sound: 'laser' },
+            { id: 'silencer', name: 'Silencer', icon: '🔇', role: 'Akuma', unlocked: false, hp: 3400, damage: 1050, superDamage: 2400, cineTitle: 'SESİ KES!', cineIcon: '🔇', helper: 'Sessizlik Dalgası', ammoType: 'mute', sound: 'hit' },
+            { id: 'zombizou', name: 'Zombizou', icon: '💋', role: 'Akuma', unlocked: false, hp: 3600, damage: 1100, superDamage: 2550, cineTitle: 'SEVGİ ÖPÜCÜĞÜ!', cineIcon: '💋', helper: 'Zombi Öpücük', ammoType: 'kiss', sound: 'lucky_charm' }
+        ];
 
-            setInterval(updateEnemy, 450);
+        const gameModes = [
+            { id: 'gem', name: '💎 Elmas Kapmaca', desc: '10 elmas topla ve koru!', requiredTrophies: 0 },
+            { id: 'bounty', name: '⭐ Yıldız Avı', desc: 'Botları alt et, yıldızları kap!', requiredTrophies: 0 }
+        ];
+
+        let randomBotNames = [
+            { name: "AlyaCezaire", id: "#MS-1049", icon: "🦊", status: "Çevrimiçi" },
+            { name: "NinoLahiffe", id: "#MS-5021", icon: "🐢", status: "Maçta" },
+            { name: "ChloeBourgeois", id: "#MS-9932", icon: "👑", status: "Çevrimdışı" },
+            { name: "KagamiTsurugi", id: "#MS-3310", icon: "⚔️", status: "Çevrimiçi" },
+            { name: "LukaCouffaine", id: "#MS-7712", icon: "🎸", status: "Çevrimiçi" }
+        ];
+
+        let player = { 
+            name: 'Ladybug', 
+            id: '#MS-' + Math.floor(1000 + Math.random() * 9000),
+            trophies: 0, 
+            gems: 60, 
+            coins: 400, 
+            selectedIdx: 0, 
+            selectedModeIdx: 0,
+            lastFreeBoxDate: "",
+            dailyOfferDay: "",
+            dailyOfferBrawlerIdx: 2,
+            friends: [
+                { name: "AlyaCezaire", id: "#MS-1049", icon: "🦊", status: "Çevrimiçi", inParty: false }
+            ]
+        };
+
+        let canvas, ctx;
+        let gameActive = false;
+        let superCharge = 0;
+        let heroPos = { x: 200, y: 200 };
+        let currentHp = 3400;
+        let maxHp = 3400;
+        let enemies = [];
+        let projectiles = [];
+        let mapObjects = [];
+        let moveX = 0, moveY = 0;
+        let modeScore = 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            canvas = document.getElementById('game-canvas');
+            ctx = canvas.getContext('2d');
+            loadAccount();
+            checkDailySystem();
+            initJoystick();
+        });
+
+        function proceedToLogin() {
+            initAudio();
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('login-screen').style.display = 'flex';
+            }, 500);
         }
 
-        function move(dir) {
-            let nextX = playerX, nextY = playerY;
-            let step = 14;
+        document.getElementById('start-game-btn').addEventListener('click', () => {
+            initAudio();
+            const nameInput = document.getElementById('username-input').value.trim();
+            if (nameInput.length > 0) player.name = nameInput;
+            saveAccount();
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'flex';
+            updateMenuUI();
+        });
 
-            if(dir === 'left') nextX -= step;
-            if(dir === 'right') nextX += step;
-            if(dir === 'up') nextY -= step;
-            if(dir === 'down') nextY += step;
+        function saveAccount() {
+            const data = {
+                player: player,
+                brawlers: brawlers.map(b => ({ unlocked: b.unlocked }))
+            };
+            localStorage.setItem('miraculous_stars_save_v10', JSON.stringify(data));
+        }
 
-            if(nextX < 0 || nextX > 326 || nextY < 0 || nextY > 426) return;
-
-            // Duvar engelleri
-            if(nextX > 30 && nextX < 95 && nextY > 70 && nextY < 115) return;
-            if(nextX > 190 && nextX < 235 && nextY > 140 && nextY < 215) return;
-            if(nextX > 90 && nextX < 175 && nextY > 290 && nextY < 330) return;
-
-            playerX = nextX;
-            playerY = nextY;
-
-            let p = document.getElementById("player");
-            p.style.left = playerX + "px";
-            p.style.top = playerY + "px";
-
-            // Çalı görünmezliği
-            if((playerX > 10 && playerX < 110 && playerY > 20 && playerY < 115) || 
-               (playerX > 220 && playerX < 330 && playerY > 320 && playerY < 425)) {
-                p.style.opacity = "0.25";
-                isHidden = true;
-            } else {
-                p.style.opacity = "1";
-                isHidden = false;
+        function loadAccount() {
+            const saved = localStorage.getItem('miraculous_stars_save_v10');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    player = parsed.player;
+                    parsed.brawlers.forEach((savedB, idx) => { 
+                        if(brawlers[idx]) {
+                            brawlers[idx].unlocked = savedB.unlocked;
+                        }
+                    });
+                } catch(e) {}
             }
         }
 
-        function hitBox() {
-            boxHp -= (5 + (powerCube * 2));
-            let box = document.getElementById("box1");
-            if(boxHp <= 0) {
-                box.remove();
-                powerCube++;
-                brawlersLeft = Math.max(2, brawlersLeft - 1);
-                document.getElementById("score-display").innerText = `Kalan savaşçı: ${brawlersLeft} | Yük: ${powerCube} 🔋`;
-            } else {
-                box.innerText = boxHp + "HP";
-            }
-        }
-
-        function attack() {
-            let proj = document.createElement("div");
-            proj.className = "projectile";
-            proj.style.left = (playerX + 12) + "px";
-            proj.style.top = playerY + "px";
-            document.getElementById("game-container").appendChild(proj);
-
-            let pTimer = setInterval(() => {
-                let t = parseInt(proj.style.top);
-                proj.style.top = (t - 22) + "px";
-
-                let eDist = Math.abs(parseInt(proj.style.left) - enemyX);
-                let eTop = parseInt(proj.style.top);
-                if(eDist < 30 && eTop < enemyY + 30) {
-                    let enemyEl = document.getElementById("enemy");
-                    enemyEl.style.filter = "brightness(3)";
-                    setTimeout(() => enemyEl.style.filter = "none", 150);
-                    proj.remove();
-                    clearInterval(pTimer);
+        function checkDailySystem() {
+            const todayStr = new Date().toDateString();
+            if(player.dailyOfferDay !== todayStr) {
+                player.dailyOfferDay = todayStr;
+                let lockedList = [];
+                brawlers.forEach((b, idx) => { if(!b.unlocked) lockedList.push(idx); });
+                if(lockedList.length > 0) {
+                    player.dailyOfferBrawlerIdx = lockedList[Math.floor(Math.random() * lockedList.length)];
+                } else {
+                    player.dailyOfferBrawlerIdx = 2;
                 }
+                saveAccount();
+            }
+        }
 
-                if(t < 0) {
-                    proj.remove();
-                    clearInterval(pTimer);
-                }
-            }, 25);
+        function resetAccountData() {
+            if(confirm("Tüm verileri sıfırlamak istiyor musun?")) {
+                localStorage.removeItem('miraculous_stars_save_v10');
+                location.reload();
+            }
+        }
+
+        function updateMenuUI() {
+            document.getElementById('display-name').innerText = player.name;
+            document.getElementById('display-id').innerText = `ID: ${player.id}`;
+            document.getElementById('player-trophies').innerText = player.trophies;
+            document.getElementById('player-gems').innerText = player.gems;
+            document.getElementById('player-coins').innerText = player.coins;
+
+            const b = brawlers[player.selectedIdx];
+            document.getElementById('selected-icon').innerText = b.icon;
+            document.getElementById('selected-name').innerText = b.name;
+            document.getElementById('selected-role').innerText = `Rol: ${b.role}`;
+        }
+
+        function openFriendsModal() {
+            const container = document.getElementById('friends-container');
+            container.innerHTML = '';
+            player.friends.forEach((f, idx) => {
+                const item = document.createElement('div');
+                item.className = `friend-item ${f.inParty ? 'online' : ''}`;
+                item.innerHTML = `
+                    <div>
+                        <strong style="color:#00ffcc;">${f.icon} ${f.name}</strong>
+                        <div style="font-size:0.75rem; color:#aaa;">ID: ${f.id} | Durum: ${f.inParty ? 'Partide 🎮' : f.status}</div>
+                    </div>
+                    <div>
+                        <button class="menu-btn interactive" style="padding:6px 12px; font-size:0.7rem; background:${f.inParty ? '#cc2222' : '#00aa66'}; border-color:${f.inParty ? '#ff3333' : '#00ffcc'};" onclick="toggleParty(${idx})">
+                            ${f.inParty ? 'Çıkar' : 'Davet Et'}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+            document.getElementById('friends-modal').style.display = 'flex';
+        }
+        function closeFriendsModal() { document.getElementById('friends-modal').style.display = 'none'; }
+
+        function addRandomFriend() {
+            let availableBots = randomBotNames.filter(b => !player.friends.some(f => f.id === b.id));
+            if(availableBots.length === 0) { alert("Başka rastgele oyuncu kalmadı!"); return; }
+            let randomBot = availableBots[Math.floor(Math.random() * availableBots.length)];
+            player.friends.push({ ...randomBot, inParty: false });
+            saveAccount();
+            openFriendsModal();
+        }
+
+        function toggleParty(idx) {
+            player.friends[idx].inParty = !player.friends[idx].inParty;
+            saveAccount();
+            openFriendsModal();
+        }
+
+        function openModeSelect() {
+            const container = document.getElementById('mode-grid-container');
+            container.innerHTML = '';
+            gameModes.forEach((m, idx) => {
+                const card = document.createElement('div');
+                card.className = `mode-card interactive ${idx === player.selectedModeIdx ? 'selected' : ''}`;
+                card.innerHTML = `<h4 style="margin:0 0 5px 0;">${m.name}</h4><p style="font-size:0.75rem; color:#aaa; margin:0;">${m.desc}</p>`;
+                card.onclick = () => { player.selectedModeIdx = idx; saveAccount(); closeModeSelect(); };
+                container.appendChild(card);
+            });
+            document.getElementById('mode-select-modal').style.display = 'flex';
+        }
+        function closeModeSelect() { document.getElementById('mode-select-modal').style.display = 'none'; }
+
+        // 30 Karakter Listesini Grid Olarak Yükleme
+        function openBrawlerSelect() {
+            const grid = document.getElementById('brawler-grid-container');
+            grid.innerHTML = '';
+            brawlers.forEach((b, index) => {
+                const card = document.createElement('div');
+                card.className = `brawler-card interactive ${index === player.selectedIdx ? 'selected' : ''} ${!b.unlocked ? 'locked' : ''}`;
+                card.innerHTML = `
+                    ${!b.unlocked ? '<span class="lock-badge">🔒</span>' : ''}
+                    <span>${b.icon}</span>
+                    <p>${b.name}</p>
+                `;
+                card.onclick = () => {
+                    if (b.unlocked) {
+                        player.selectedIdx = index;
+                        playSoundEffect('lucky_charm');
+                        saveAccount();
+                        updateMenuUI();
+                        openBrawlerSelect();
+                    } else {
+                        playSoundEffect('hit');
+                        alert(`${b.name} kilitli! Kutulardan çıkarabilir veya marketten alabilirsin.`);
+                    }
+                };
+                grid.appendChild(card);
+            });
+            document.getElementById('brawler-select-modal').style.display = 'flex';
+        }
+        function closeBrawlerSelect() { document.getElementById('brawler-select-modal').style.display = 'none'; }
+
+        function openBoxModal() {
+            document.getElementById('box-result').innerText = '';
+            updateMarketUI();
+            document.getElementById('box-modal').style.display = 'flex';
+        }
+        function closeBoxModal() { document.getElementById('box-modal').style.display = 'none'; }
+
+        function updateMarketUI() {
+            let bObj = brawlers[player.dailyOfferBrawlerIdx];
+            let offerContent = document.getElementById('daily-offer-content');
+            let offerBtnContainer = document.getElementById('daily-offer-btn-container');
+
+            if(bObj.unlocked) {
+                offerContent.innerHTML = `<span style="color:#00ffcc;">${bObj.icon} ${bObj.name}</span><br><span style="font-size:0.75rem; color:#aaa;">Zaten Sende Var! ✔️</span>`;
+                offerBtnContainer.innerHTML = '';
+            } else {
+                offerContent.innerHTML = `<span style="color:#ffcc00; font-weight:bold;">${bObj.icon} ${bObj.name} (${bObj.role})</span>`;
+                offerBtnContainer.innerHTML = `<button class="menu-btn interactive" style="padding:6px 15px; font-size:0.75rem; background:#cc8800; border-color:#ffcc00;" onclick="buyDailyOffer()">Satın Al (50 💎)</button>`;
+            }
+
+            const todayStr = new Date().toDateString();
+            let freeBtn = document.getElementById('free-box-btn');
+            let freeStatus = document.getElementById('free-box-status');
+            if(player.lastFreeBoxDate === todayStr) {
+                freeBtn.innerText = "ALINDI";
+                freeBtn.style.background = "#555";
+            } else {
+                freeBtn.innerText = "AL";
+                freeBtn.style.background = "#00aa66";
+            }
+        }
+
+        function buyDailyOffer() {
+            let bObj = brawlers[player.dailyOfferBrawlerIdx];
+            if(player.gems >= 50) {
+                player.gems -= 50;
+                bObj.unlocked = true;
+                playSoundEffect('lucky_charm');
+                saveAccount();
+                updateMenuUI();
+                updateMarketUI();
+                document.getElementById('box-result').innerText = `✨ Tebrikler! ${bObj.name} açıldı!`;
+            } else {
+                playSoundEffect('hit');
+                document.getElementById('box-result').innerText = `Yeterli elmasın yok!`;
+            }
+        }
+
+        function openFreeBox() {
+            const todayStr = new Date().toDateString();
+            if(player.lastFreeBoxDate === todayStr) {
+                document.getElementById('box-result').innerText = `Bugünkü bedava kutuyu zaten aldın!`;
+                return;
+            }
+            player.lastFreeBoxDate = todayStr;
+            player.coins += 60;
+            player.gems += 15;
+            playSoundEffect('lucky_charm');
+            saveAccount();
+            updateMenuUI();
+            updateMarketUI();
+            document.getElementById('box-result').innerText = `🎁 Bedava Kutudan 60 Altın ve 15 Elmas Çıktı!`;
+        }
+
+        function openBox(type) {
+            let cost = type === 'brawl' ? 100 : 80;
+            if (type === 'brawl' && player.coins < cost) { document.getElementById('box-result').innerText = 'Yetersiz Altın!'; return; }
+            if (type === 'mega' && player.gems < cost) { document.getElementById('box-result').innerText = 'Yetersiz Elmas!'; return; }
+
+            if (type === 'brawl') player.coins -= cost; else player.gems -= cost;
+            saveAccount();
+            updateMenuUI();
+
+            const locked = brawlers.filter(b => !b.unlocked);
+            if (locked.length > 0 && Math.random() < 0.4) {
+                const newB = locked[Math.floor(Math.random() * locked.length)];
+                newB.unlocked = true;
+                playSoundEffect('lucky_charm');
+                document.getElementById('box-result').innerHTML = `🎉 MUCİZE!<br>Yeni Karakter Açıldı: <span style="color:#ffcc00;">${newB.icon} ${newB.name}</span>`;
+                saveAccount();
+            } else {
+                let reward = Math.floor(Math.random() * 50) + 20;
+                player.coins += reward;
+                playSoundEffect('shoot');
+                document.getElementById('box-result').innerText = `Kutudan ${reward} Altın Çıktı! 🪙`;
+            }
+            updateMarketUI();
+        }
+
+        function startMatch() {
+            initAudio();
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('ui-container').style.display = 'flex';
+            canvas.style.display = 'block';
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            heroPos = { x: canvas.width / 2, y: canvas.height / 2 };
+            
+            const curB = brawlers[player.selectedIdx];
+            maxHp = curB.hp;
+            currentHp = maxHp;
+            updateHpBar();
+
+            superCharge = 0;
+            modeScore = 0;
+            document.getElementById('super-btn').classList.remove('ready');
+
+            const mode = gameModes[player.selectedModeIdx];
+            document.getElementById('current-mode-title').innerText = mode.name.split(' ')[1];
+            document.getElementById('hud-score').innerText = 'Hedef: 10';
+
+            enemies = [];
+            projectiles = [];
+            
+            let partyFriends = player.friends.filter(f => f.inParty);
+            partyFriends.forEach((pf, i) => {
+                enemies.push({
+                    x: heroPos.x + (i + 1) * 40,
+                    y: heroPos.y + 40,
+                    hp: 2000, maxHp: 2000, damage: 25, speed: 2,
+                    icon: pf.icon, name: pf.name, isAlly: true
+                });
+            });
+
+            for (let i = 0; i < 3; i++) spawnAkumaBot();
+
+            mapObjects = [];
+            for (let i = 0; i < 6; i++) {
+                mapObjects.push({ x: Math.random() * (canvas.width - 100) + 50, y: Math.random() * (canvas.height - 200) + 100, type: mode.id === 'gem' ? 'gem' : 'star' });
+            }
+
+            gameActive = true;
+            requestAnimationFrame(gameLoop);
+        }
+
+        function spawnAkumaBot() {
+            enemies.push({
+                x: Math.random() * (canvas.width - 100) + 50,
+                y: Math.random() * (canvas.height - 200) + 100,
+                hp: 1500, maxHp: 1500, damage: 18, speed: 1.5,
+                icon: '🦋', name: 'Akuma Bot', isAlly: false
+            });
+        }
+
+        function updateHpBar() {
+            let pct = Math.max(0, (currentHp / maxHp) * 100);
+            document.getElementById('player-hp-fill').style.width = pct + '%';
+        }
+
+        function returnToMenu() {
+            gameActive = false;
+            canvas.style.display = 'none';
+            document.getElementById('ui-container').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'flex';
+            updateMenuUI();
+        }
+
+        function useAttack() {
+            const curB = brawlers[player.selectedIdx];
+            playSoundEffect(curB.sound || 'shoot');
+
+            let angle = -Math.PI / 2;
+            if (moveX !== 0 || moveY !== 0) {
+                angle = Math.atan2(moveY, moveX);
+            }
+
+            projectiles.push({
+                x: heroPos.x, y: heroPos.y,
+                vx: Math.cos(angle) * 10, vy: Math.sin(angle) * 10,
+                damage: curB.damage, range: 400, travelled: 0,
+                ammoType: curB.ammoType || 'blade', angle: angle
+            });
         }
 
         function useSuper() {
-            // Süper güç efekti (Hızlı atış veya özel hamle)
-            powerCube += 1;
-            document.getElementById("score-display").innerText = `Kalan savaşçı: ${brawlersLeft} | Yük: ${powerCube} 🔋`;
+            if (superCharge >= 100) {
+                const curB = brawlers[player.selectedIdx];
+                playSoundEffect('lucky_charm');
+                superCharge = 0;
+                document.getElementById('super-btn').classList.remove('ready');
+
+                const cinematic = document.getElementById('super-cinematic');
+                document.getElementById('cine-icon').innerText = curB.cineIcon;
+                document.getElementById('cine-title').innerText = curB.cineTitle;
+                document.getElementById('cine-desc').innerText = `Destek: ${curB.helper} Alana Dahil Oldu!`;
+                
+                cinematic.style.display = 'flex';
+
+                enemies.forEach(en => {
+                    if(!en.isAlly) en.hp -= curB.superDamage;
+                });
+
+                setTimeout(() => { cinematic.style.display = 'none'; }, 1200);
+            }
         }
 
-        function updateEnemy() {
-            if(isHidden) return; // Çalıdayken düşman göremez
+        function initJoystick() {
+            const zone = document.getElementById('joystick-zone');
+            const knob = document.getElementById('joystick-knob');
+            let maxDist = 40;
+            let activeTouchId = null;
 
-            if(enemyX < playerX) enemyX += 7;
-            if(enemyX > playerX) enemyX -= 7;
-            if(enemyY < playerY) enemyY += 7;
-            if(enemyY > playerY) enemyY -= 7;
+            zone.addEventListener('touchstart', (e) => {
+                if (activeTouchId === null) activeTouchId = e.changedTouches[0].identifier;
+            });
 
-            let enemyEl = document.getElementById("enemy");
-            enemyEl.style.left = enemyX + "px";
-            enemyEl.style.top = enemyY + "px";
+            window.addEventListener('touchmove', (e) => {
+                if (activeTouchId === null) return;
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    let t = e.changedTouches[i];
+                    if (t.identifier === activeTouchId) {
+                        let rect = zone.getBoundingClientRect();
+                        let cx = rect.left + rect.width / 2;
+                        let cy = rect.top + rect.height / 2;
+                        let dx = t.clientX - cx;
+                        let dy = t.clientY - cy;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
 
-            if(Math.abs(enemyX - playerX) < 25 && Math.abs(enemyY - playerY) < 25) {
-                playerHp -= 15;
-                if(playerHp <= 0) {
-                    alert("Yenildin! Tekrar başlıyor...");
-                    location.reload();
+                        if (dist > maxDist) {
+                            dx = (dx / dist) * maxDist;
+                            dy = (dy / dist) * maxDist;
+                        }
+
+                        knob.style.transform = `translate(${dx}px, ${dy}px)`;
+                        moveX = dx / maxDist;
+                        moveY = dy / maxDist;
+                    }
                 }
-            }
+            });
+
+            window.addEventListener('touchend', (e) => {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    if (e.changedTouches[i].identifier === activeTouchId) {
+                        activeTouchId = null;
+                        knob.style.transform = `translate(0px, 0px)`;
+                        moveX = 0; moveY = 0;
+                    }
+                }
+            });
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+
+            heroPos.x += moveX * 4.5;
+            heroPos.y += moveY * 4.5;
+            heroPos.x = Math.max(30, Math.min(canvas.width - 30, heroPos.x));
+            heroPos.y = Math.max(60, Math.min(canvas.height - 120, heroPos.y));
+
+            projectiles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.travelled += Math.hypot(p.vx, p.vy);
+
+                enemies.forEach(en => {
+                    if (!en.isAlly) {
+                        let d = Math.hypot(p.x - en.x, p.y - en.y);
+                        if (d < 28) {
+                            en.hp -= p.damage;
+                            p.travelled = p.range;
+                            playSoundEffect('hit');
+
+                            superCharge += 15;
+                            if (superCharge >= 100) {
+                                superCharge = 100;
+                                document.getElementById('super-btn').classList.add('ready');
+                                playSoundEffect('super_ready');
+                            }
+                        }
+                    }
+                });
+            });
+            projectiles = projectiles.filter(p => p.travelled < p.range);
+
+            enemies.forEach((en) => {
+                if (en.isAlly) {
+                    let target = enemies.find(e => !e.isAlly);
+                    if(target) {
+                        let angle = Math.atan2(target.y - en.y, target.x - en.x);
+                        en.x += Math.cos(angle) * en.speed;
+                        en.y += Math.sin(angle) * en.speed;
+                        let dist = Math.hypot(target.x - en.x, target.y - en.y);
+                        if(dist < 30) target.hp -= 10;
+                    }
+                } else {
+                    let angle = Math.atan2(heroPos.y - en.y, heroPos.x - en.x);
+                    en.x += Math.cos(angle) * en.speed;
+                    en.y += Math.sin(angle) * en.speed;
+
+                    let dist = Math.hypot(heroPos.x - en.x, heroPos.y - en.y);
+                    if (dist < 32) {
+                        currentHp -= en.damage;
+                        updateHpBar();
+                        playSoundEffect('hit');
+                        
+                        heroPos.x -= Math.cos(angle) * 15;
+                        heroPos.y -= Math.sin(angle) * 15;
+
+                        if (currentHp <= 0) {
+                            currentHp = maxHp;
+                            heroPos = { x: canvas.width / 2, y: canvas.height / 2 };
+                            updateHpBar();
+                        }
+                    }
+                }
+            });
+
+            enemies = enemies.filter(en => en.hp > 0);
+            while(enemies.filter(e => !e.isAlly).length < 3) spawnAkumaBot();
+
+            const mode = gameModes[player.selectedModeIdx];
+            mapObjects.forEach((obj, idx) => {
+                let dist = Math.hypot(heroPos.x - obj.x, heroPos.y - obj.y);
+                if (dist < 35) {
+                    mapObjects.splice(idx, 1);
+                    modeScore++;
+                    playSoundEffect('lucky_charm');
+                    
+                    document.getElementById('hud-score').innerText = `Hedef: ${modeScore}/10`;
+                    if (modeScore >= 10) {
+                        alert("🏆 ZAFER! Maçı kazandın! +15 Kupa");
+                        player.trophies += 15;
+                        saveAccount();
+                        returnToMenu();
+                    }
+
+                    mapObjects.push({ x: Math.random() * (canvas.width - 100) + 50, y: Math.random() * (canvas.height - 200) + 100, type: obj.type });
+                }
+            });
+
+            ctx.fillStyle = '#2c1638';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            mapObjects.forEach(obj => {
+                ctx.font = '24px sans-serif';
+                ctx.fillText(obj.type === 'gem' ? '💎' : '⭐', obj.x - 12, obj.y + 8);
+            });
+
+            projectiles.forEach(p => {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.angle);
+                ctx.font = '20px sans-serif';
+                ctx.fillText('✨', -10, 8);
+                ctx.restore();
+            });
+
+            enemies.forEach(en => {
+                ctx.fillStyle = en.isAlly ? '#00ffcc' : '#ff3333';
+                ctx.beginPath();
+                ctx.arc(en.x, en.y, 22, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.font = '22px sans-serif';
+                ctx.fillText(en.icon, en.x - 11, en.y + 8);
+
+                ctx.fillStyle = '#444';
+                ctx.fillRect(en.x - 20, en.y - 32, 40, 6);
+                ctx.fillStyle = en.isAlly ? '#00ffcc' : '#ff0055';
+                ctx.fillRect(en.x - 20, en.y - 32, (en.hp / en.maxHp) * 40, 6);
+            });
+
+            const curB = brawlers[player.selectedIdx];
+            ctx.fillStyle = '#00ffff';
+            ctx.beginPath();
+            ctx.arc(heroPos.x, heroPos.y, 25, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.font = '26px sans-serif';
+            ctx.fillText(curB.icon, heroPos.x - 13, heroPos.y + 10);
+
+            requestAnimationFrame(gameLoop);
         }
     </script>
 </body>
