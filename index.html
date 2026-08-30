@@ -3,42 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miraculous: Brawl Stars Edition</title>
+    <title>Miraculous: Hesaplaşma</title>
     <style>
         body {
-            margin: 0; padding: 0; background: #0f172a;
+            margin: 0; padding: 0; background: #0b0f19;
             font-family: 'Arial', sans-serif; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
             height: 100vh; color: white; overflow: hidden; touch-action: none;
         }
         .screen { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 400px; }
         .hidden { display: none !important; }
-        h1 { color: #facc15; margin: 5px; font-size: 24px; text-shadow: 2px 2px #ef4444; }
+        h1 { color: #facc15; margin: 5px; font-size: 22px; text-shadow: 2px 2px #ef4444; text-align: center; }
         
-        /* Butonlar ve Menü */
         .btn {
             background: #ef4444; color: white; border: none; padding: 12px 24px;
             font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; margin: 6px;
-            box-shadow: 0 4px #b91c1c; width: 80%; text-align: center;
+            box-shadow: 0 4px #b91c1c; width: 85%; text-align: center;
         }
         .btn:active { transform: translateY(4px); box-shadow: 0 0 #b91c1c; }
-        input { padding: 10px; border-radius: 8px; border: none; font-size: 16px; margin: 5px; text-align: center; width: 75%; }
+        input { padding: 10px; border-radius: 8px; border: none; font-size: 15px; margin: 5px; text-align: center; width: 80%; background: #1e293b; color: white; }
 
-        /* Kostüm Kartları */
         .skin-card {
             background: #1e293b; border: 2px solid #334155; border-radius: 12px;
-            padding: 10px; margin: 5px; width: 80%; display: flex; align-items: center; justify-content: space-between;
+            padding: 10px; margin: 6px; width: 85%; display: flex; align-items: center; justify-content: space-between; cursor: pointer;
         }
         .skin-card.selected { border-color: #facc15; background: #334155; }
 
-        /* Oyun Alanı */
         #game-container {
-            width: 360px; height: 480px; background: #15803d;
+            width: 360px; height: 460px; background: #166534;
             border: 4px solid #facc15; border-radius: 16px;
-            position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.6);
         }
         .bush {
-            position: absolute; background: #166534; border-radius: 12px; opacity: 0.9;
+            position: absolute; background: #14532d; border-radius: 12px; opacity: 0.9;
         }
         .entity {
             width: 36px; height: 36px; position: absolute;
@@ -48,13 +45,12 @@
         .box {
             width: 32px; height: 32px; background: #78350f; border: 2px solid #451a03;
             position: absolute; display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: bold; color: white; border-radius: 6px;
+            font-size: 10px; font-weight: bold; color: white; border-radius: 6px; cursor: pointer;
         }
         .projectile {
-            width: 12px; height: 12px; background: #facc15; border-radius: 50%;
+            width: 10px; height: 10px; background: #facc15; border-radius: 50%;
             position: absolute; box-shadow: 0 0 8px #facc15;
         }
-        /* Kontroller */
         #controls-area {
             margin-top: 10px; display: flex; width: 360px; justify-content: space-between; align-items: center;
         }
@@ -65,27 +61,24 @@
             display: flex; align-items: center; justify-content: center;
         }
         .ctrl-btn:active { background: #ca8a04; }
-        .action-btns { display: flex; gap: 10px; }
         .attack-btn { background: #ef4444; color: white; width: 65px; height: 65px; border-radius: 50%; font-size: 26px; border: none; box-shadow: 0 4px #b91c1c; }
     </style>
 </head>
 <body>
 
-    <!-- 1. GİRİŞ VE ARKADAŞ MENÜSÜ -->
     <div id="menu-screen" class="screen">
         <h1>Miraculous Hesaplaşma</h1>
         <input type="text" id="friend-input" placeholder="Arkadaşının Kullanıcı Adı">
         <button class="btn" onclick="addFriend()">Arkadaş Ekle</button>
         <p id="friend-status" style="color: #4ade80; font-size: 13px; margin: 2px;"></p>
 
-        <select id="mode-select" style="padding: 10px; border-radius: 8px; font-size: 15px; margin: 8px; width: 80%;">
+        <select id="mode-select" style="padding: 10px; border-radius: 8px; font-size: 15px; margin: 8px; width: 85%; background: #1e293b; color: white;">
             <option value="solo">Tek Hesaplaşma</option>
             <option value="duo">Çift Hesaplaşma (+ Chat Noir Bot)</option>
         </select>
         <button class="btn" style="background:#22c55e; box-shadow: 0 4px #15803d;" onclick="goToSkinSelect()">DEVAM ET</button>
     </div>
 
-    <!-- 2. KOSTÜM SEÇİM EKRANI -->
     <div id="skin-screen" class="screen hidden">
         <h1>Kostüm Seçimi</h1>
         <div class="skin-card selected" onclick="selectSkin('🐞', 0, this)">
@@ -93,7 +86,7 @@
             <span>Ücretsiz</span>
         </div>
         <div class="skin-card" onclick="selectSkin('🐅', 29, this)">
-            <span>🐅 Kaplan Böcek (Mor)</span>
+            <span>🐅 Kaplan Böcek</span>
             <span>29 💎</span>
         </div>
         <div class="skin-card" onclick="selectSkin('🐈‍⬛', 149, this)">
@@ -103,7 +96,6 @@
         <button class="btn" style="background:#3b82f6; box-shadow: 0 4px #1d4ed8; margin-top: 15px;" onclick="startGame()">OYUNA BAŞLA</button>
     </div>
 
-    <!-- 3. OYUN EKRANI -->
     <div id="game-screen" class="screen hidden">
         <div style="display: flex; justify-content: space-between; width: 360px; font-size: 13px; font-weight: bold; margin-bottom: 4px;">
             <span id="score-display">Yük: 0 🔋 | Can: 100 ❤️</span>
@@ -111,18 +103,14 @@
         </div>
 
         <div id="game-container">
-            <!-- Çalılar -->
-            <div class="bush" style="width: 90px; height: 90px; top: 40px; left: 30px;"></div>
-            <div class="bush" style="width: 80px; height: 100px; top: 320px; left: 240px;"></div>
+            <div class="bush" style="width: 85px; height: 85px; top: 30px; left: 25px;"></div>
+            <div class="bush" style="width: 80px; height: 95px; top: 310px; left: 250px;"></div>
             
-            <!-- Kutu -->
-            <div class="box" id="box1" style="top: 210px; left: 164px;" onclick="hitBox()">15HP</div>
+            <div class="box" id="box1" style="top: 200px; left: 164px;" onclick="hitBox()">15HP</div>
 
-            <!-- Akumalı Karakter (Örn: Taş Kalp / Stormy Weather) -->
-            <div class="entity" id="enemy" style="top: 30px; left: 280px;" title="Akumalı!">🦹‍♂️</div>
+            <div class="entity" id="enemy" style="top: 20px; left: 280px;" title="Akumalı">🦹‍♂️</div>
 
-            <!-- Oyuncu ve Bot -->
-            <div class="entity" id="player" style="top: 400px; left: 160px;">🐞</div>
+            <div class="entity" id="player" style="top: 380px; left: 160px;">🐞</div>
         </div>
 
         <div id="controls-area">
@@ -140,8 +128,8 @@
 
     <script>
         let selectedSkinIcon = '🐞';
-        let playerX = 160, playerY = 400;
-        let enemyX = 280, enemyY = 30;
+        let playerX = 160, playerY = 380;
+        let enemyX = 280, enemyY = 20;
         let powerCube = 0;
         let playerHp = 100;
         let boxHp = 15;
@@ -152,7 +140,7 @@
         function addFriend() {
             let name = document.getElementById("friend-input").value;
             if(name) {
-                document.getElementById("friend-status").innerText = name + " başarıyla eklendi! ✅";
+                document.getElementById("friend-status").innerText = name + " arkadaş eklendi! ✅";
             }
         }
 
@@ -180,34 +168,33 @@
             if(duoMode) {
                 botObj = document.createElement("div");
                 botObj.className = "entity";
-                botObj.innerHTML = "🐾"; // Chat Noir Bot
-                botObj.style.left = (playerX + 45) + "px";
+                botObj.innerHTML = "🐾";
+                botObj.style.left = (playerX + 40) + "px";
                 botObj.style.top = playerY + "px";
                 document.getElementById("game-container").appendChild(botObj);
             }
 
-            // Akumalı yapay zeka hareketi
-            setInterval(updateEnemy, 600);
+            setInterval(updateEnemy, 500);
         }
 
         function move(dir) {
-            if(dir === 'left') playerX -= 18;
-            if(dir === 'right') playerX += 18;
-            if(dir === 'up') playerY -= 18;
-            if(dir === 'down') playerY += 18;
+            if(dir === 'left') playerX -= 16;
+            if(dir === 'right') playerX += 16;
+            if(dir === 'up') playerY -= 16;
+            if(dir === 'down') playerY += 16;
 
             if(playerX < 0) playerX = 0;
             if(playerX > 324) playerX = 324;
             if(playerY < 0) playerY = 0;
-            if(playerY > 444) playerY = 444;
+            if(playerY > 424) playerY = 424;
 
             let p = document.getElementById("player");
             p.style.left = playerX + "px";
             p.style.top = playerY + "px";
 
             // Çalı kontrolü (Görünmezlik)
-            if(playerX > 20 && playerX < 120 && playerY > 30 && playerY < 130) {
-                p.style.opacity = "0.3";
+            if(playerX > 15 && playerX < 115 && playerY > 20 && playerY < 120) {
+                p.style.opacity = "0.2";
                 isHidden = true;
             } else {
                 p.style.opacity = "1";
@@ -230,21 +217,20 @@
         function attack() {
             let proj = document.createElement("div");
             proj.className = "projectile";
-            proj.style.left = (playerX + 12) + "px";
-            proj.style.top = (playerY) + "px";
+            proj.style.left = (playerX + 13) + "px";
+            proj.style.top = playerY + "px";
             document.getElementById("game-container").appendChild(proj);
 
             let pTimer = setInterval(() => {
                 let t = parseInt(proj.style.top);
-                proj.style.top = (t - 20) + "px";
+                proj.style.top = (t - 25) + "px";
 
-                // Akumalıyı vurma kontrolü
                 let eDist = Math.abs(parseInt(proj.style.left) - enemyX);
                 let eTop = parseInt(proj.style.top);
                 if(eDist < 30 && eTop < enemyY + 30) {
                     let enemyEl = document.getElementById("enemy");
-                    enemyEl.style.filter = "brightness(2)";
-                    setTimeout(() => enemyEl.style.filter = "none", 200);
+                    enemyEl.style.filter = "brightness(2.5)";
+                    setTimeout(() => enemyEl.style.filter = "none", 150);
                     proj.remove();
                     clearInterval(pTimer);
                 }
@@ -253,22 +239,21 @@
                     proj.remove();
                     clearInterval(pTimer);
                 }
-            }, 30);
+            }, 25);
         }
 
         function updateEnemy() {
-            if(isHidden) return; // Çalıdaysak akumalı bizi bulamaz!
+            if(isHidden) return; // Çalıdayken akumalı bizi göremez
 
-            if(enemyX < playerX) enemyX += 10;
-            if(enemyX > playerX) enemyX -= 10;
-            if(enemyY < playerY) enemyY += 10;
-            if(enemyY > playerY) enemyY -= 10;
+            if(enemyX < playerX) enemyX += 8;
+            if(enemyX > playerX) enemyX -= 8;
+            if(enemyY < playerY) enemyY += 8;
+            if(enemyY > playerY) enemyY -= 8;
 
             let enemyEl = document.getElementById("enemy");
             enemyEl.style.left = enemyX + "px";
             enemyEl.style.top = enemyY + "px";
 
-            // Oyuncuya zarar verme
             if(Math.abs(enemyX - playerX) < 25 && Math.abs(enemyY - playerY) < 25) {
                 playerHp -= 10;
                 document.getElementById("score-display").innerText = `Yük: ${powerCube} 🔋 | Can: ${playerHp} ❤️`;
