@@ -3,178 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miraculous: Hesaplaşma</title>
+    <title>Miraculous: Brawl Stars Edition</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            background: #111;
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            color: white;
-            overflow: hidden;
-            touch-action: none;
+            margin: 0; padding: 0; background: #0f172a;
+            font-family: 'Arial', sans-serif; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; color: white; overflow: hidden; touch-action: none;
         }
-        #menu, #game-ui {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .screen { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 400px; }
         .hidden { display: none !important; }
-        h1 { color: #ffd700; margin: 5px; font-size: 22px; text-shadow: 2px 2px #ff0000; }
+        h1 { color: #facc15; margin: 5px; font-size: 24px; text-shadow: 2px 2px #ef4444; }
         
-        /* Menü Stilleri */
+        /* Butonlar ve Menü */
         .btn {
-            background: #ff1744; color: white; border: none; padding: 12px 25px;
-            font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; margin: 8px;
-            box-shadow: 0 4px #b71c1c;
+            background: #ef4444; color: white; border: none; padding: 12px 24px;
+            font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; margin: 6px;
+            box-shadow: 0 4px #b91c1c; width: 80%; text-align: center;
         }
-        .btn:active { transform: translateY(4px); box-shadow: 0 0 #b71c1c; }
-        input { padding: 10px; border-radius: 8px; border: none; font-size: 16px; margin: 5px; text-align: center; }
+        .btn:active { transform: translateY(4px); box-shadow: 0 0 #b91c1c; }
+        input { padding: 10px; border-radius: 8px; border: none; font-size: 16px; margin: 5px; text-align: center; width: 75%; }
+
+        /* Kostüm Kartları */
+        .skin-card {
+            background: #1e293b; border: 2px solid #334155; border-radius: 12px;
+            padding: 10px; margin: 5px; width: 80%; display: flex; align-items: center; justify-content: space-between;
+        }
+        .skin-card.selected { border-color: #facc15; background: #334155; }
 
         /* Oyun Alanı */
         #game-container {
-            width: 360px;
-            height: 500px;
-            background: #2e7d32;
-            border: 4px solid #ffd700;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
+            width: 360px; height: 480px; background: #15803d;
+            border: 4px solid #facc15; border-radius: 16px;
+            position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        /* Çalılar */
         .bush {
-            position: absolute;
-            background: #1b5e20;
-            border-radius: 8px;
-            opacity: 0.85;
+            position: absolute; background: #166534; border-radius: 12px; opacity: 0.9;
         }
-        /* Karakterler */
-        #player {
-            width: 40px; height: 40px; position: absolute;
-            display: flex; align-items: center; justify-content: center; font-size: 24px;
-            transition: opacity 0.3s;
+        .entity {
+            width: 36px; height: 36px; position: absolute;
+            display: flex; align-items: center; justify-content: center; font-size: 22px;
+            transition: opacity 0.2s;
         }
-        .bot-friend {
-            width: 40px; height: 40px; position: absolute;
-            display: flex; align-items: center; justify-content: center; font-size: 24px;
-        }
-        .enemy {
-            width: 40px; height: 40px; position: absolute;
-            display: flex; align-items: center; justify-content: center; font-size: 24px;
-        }
-        /* Kutu */
         .box {
-            width: 35px; height: 35px; background: #8d6e63; border: 2px solid #3e2723;
+            width: 32px; height: 32px; background: #78350f; border: 2px solid #451a03;
             position: absolute; display: flex; align-items: center; justify-content: center;
-            font-size: 14px; font-weight: bold; color: white; border-radius: 4px;
+            font-size: 11px; font-weight: bold; color: white; border-radius: 6px;
+        }
+        .projectile {
+            width: 12px; height: 12px; background: #facc15; border-radius: 50%;
+            position: absolute; box-shadow: 0 0 8px #facc15;
         }
         /* Kontroller */
-        #controls {
-            margin-top: 10px; display: flex; gap: 15px;
+        #controls-area {
+            margin-top: 10px; display: flex; width: 360px; justify-content: space-between; align-items: center;
         }
+        .d-pad { display: grid; grid-template-columns: repeat(3, 45px); gap: 4px; }
         .ctrl-btn {
-            background: #ffd700; border: none; width: 60px; height: 50px;
-            font-size: 20px; font-weight: bold; border-radius: 10px; color: #b71c1c;
+            background: #eab308; border: none; width: 45px; height: 45px;
+            font-size: 18px; font-weight: bold; border-radius: 10px; color: #78350f;
+            display: flex; align-items: center; justify-content: center;
         }
+        .ctrl-btn:active { background: #ca8a04; }
+        .action-btns { display: flex; gap: 10px; }
+        .attack-btn { background: #ef4444; color: white; width: 65px; height: 65px; border-radius: 50%; font-size: 26px; border: none; box-shadow: 0 4px #b91c1c; }
     </style>
 </head>
 <body>
 
-    <!-- GİRİŞ VE MENÜ EKRANI -->
-    <div id="menu">
+    <!-- 1. GİRİŞ VE ARKADAŞ MENÜSÜ -->
+    <div id="menu-screen" class="screen">
         <h1>Miraculous Hesaplaşma</h1>
-        <input type="text" id="friend-input" placeholder="Arkadaş Kullanıcı Adı">
+        <input type="text" id="friend-input" placeholder="Arkadaşının Kullanıcı Adı">
         <button class="btn" onclick="addFriend()">Arkadaş Ekle</button>
-        <p id="friend-status" style="color: #00e676; font-size: 14px;"></p>
+        <p id="friend-status" style="color: #4ade80; font-size: 13px; margin: 2px;"></p>
 
-        <select id="mode-select" style="padding: 10px; border-radius: 8px; font-size: 16px; margin: 10px;">
+        <select id="mode-select" style="padding: 10px; border-radius: 8px; font-size: 15px; margin: 8px; width: 80%;">
             <option value="solo">Tek Hesaplaşma</option>
-            <option value="duo">Çift Hesaplaşma (+ Bot Arkadaş)</option>
+            <option value="duo">Çift Hesaplaşma (+ Chat Noir Bot)</option>
         </select>
-        <button class="btn" onclick="startGame()">OYUNA BAŞLA</button>
+        <button class="btn" style="background:#22c55e; box-shadow: 0 4px #15803d;" onclick="goToSkinSelect()">DEVAM ET</button>
     </div>
 
-    <!-- OYUN EKRANI -->
-    <div id="game-ui" class="hidden">
-        <div style="display: flex; justify-content: space-between; width: 360px; font-size: 14px; font-weight: bold;">
-            <span id="score-display">Yük: 0 🔋</span>
-            <span id="mode-display">Mod: Tek</span>
+    <!-- 2. KOSTÜM SEÇİM EKRANI -->
+    <div id="skin-screen" class="screen hidden">
+        <h1>Kostüm Seçimi</h1>
+        <div class="skin-card selected" onclick="selectSkin('🐞', 0, this)">
+            <span>🐞 Klasik Ladybug</span>
+            <span>Ücretsiz</span>
+        </div>
+        <div class="skin-card" onclick="selectSkin('🐅', 29, this)">
+            <span>🐅 Kaplan Böcek (Mor)</span>
+            <span>29 💎</span>
+        </div>
+        <div class="skin-card" onclick="selectSkin('🐈‍⬛', 149, this)">
+            <span>🐈‍⬛ Cat Walker</span>
+            <span>149 💎</span>
+        </div>
+        <button class="btn" style="background:#3b82f6; box-shadow: 0 4px #1d4ed8; margin-top: 15px;" onclick="startGame()">OYUNA BAŞLA</button>
+    </div>
+
+    <!-- 3. OYUN EKRANI -->
+    <div id="game-screen" class="screen hidden">
+        <div style="display: flex; justify-content: space-between; width: 360px; font-size: 13px; font-weight: bold; margin-bottom: 4px;">
+            <span id="score-display">Yük: 0 🔋 | Can: 100 ❤️</span>
+            <span id="mode-label">Tek</span>
         </div>
 
         <div id="game-container">
             <!-- Çalılar -->
-            <div class="bush" style="width: 80px; height: 80px; top: 50px; left: 40px;"></div>
-            <div class="bush" style="width: 70px; height: 90px; top: 300px; left: 240px;"></div>
+            <div class="bush" style="width: 90px; height: 90px; top: 40px; left: 30px;"></div>
+            <div class="bush" style="width: 80px; height: 100px; top: 320px; left: 240px;"></div>
             
             <!-- Kutu -->
-            <div class="box" id="box1" style="top: 200px; left: 160px;" onclick="hitBox()">🎁10HP</div>
+            <div class="box" id="box1" style="top: 210px; left: 164px;" onclick="hitBox()">15HP</div>
 
-            <!-- Karakterler -->
-            <div id="player">🐞</div>
+            <!-- Akumalı Karakter (Örn: Taş Kalp / Stormy Weather) -->
+            <div class="entity" id="enemy" style="top: 30px; left: 280px;" title="Akumalı!">🦹‍♂️</div>
+
+            <!-- Oyuncu ve Bot -->
+            <div class="entity" id="player" style="top: 400px; left: 160px;">🐞</div>
         </div>
 
-        <div id="controls">
-            <button class="ctrl-btn" onclick="move('left')">◀</button>
-            <button class="ctrl-btn" onclick="move('up')">▲</button>
-            <button class="ctrl-btn" onclick="move('down')">▼</button>
-            <button class="ctrl-btn" onclick="move('right')">▶</button>
-            <button class="ctrl-btn" style="background:#00e676;" onclick="attack()">💥</button>
+        <div id="controls-area">
+            <div class="d-pad">
+                <div></div><button class="ctrl-btn" onclick="move('up')">▲</button><div></div>
+                <button class="ctrl-btn" onclick="move('left')">◀</button>
+                <button class="ctrl-btn" onclick="move('down')">▼</button>
+                <button class="ctrl-btn" onclick="move('right')">▶</button>
+            </div>
+            <div class="action-btns">
+                <button class="attack-btn" onclick="attack()">💥</button>
+            </div>
         </div>
     </div>
 
     <script>
+        let selectedSkinIcon = '🐞';
         let playerX = 160, playerY = 400;
+        let enemyX = 280, enemyY = 30;
         let powerCube = 0;
-        let boxHp = 10;
+        let playerHp = 100;
+        let boxHp = 15;
         let isHidden = false;
+        let duoMode = false;
+        let botObj = null;
 
         function addFriend() {
             let name = document.getElementById("friend-input").value;
             if(name) {
-                document.getElementById("friend-status").innerText = name + " arkadaş olarak eklendi! ✅";
+                document.getElementById("friend-status").innerText = name + " başarıyla eklendi! ✅";
             }
+        }
+
+        function goToSkinSelect() {
+            let mode = document.getElementById("mode-select").value;
+            duoMode = (mode === "duo");
+            document.getElementById("menu-screen").classList.add("hidden");
+            document.getElementById("skin-screen").classList.remove("hidden");
+        }
+
+        function selectSkin(icon, price, element) {
+            selectedSkinIcon = icon;
+            document.querySelectorAll('.skin-card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
         }
 
         function startGame() {
-            let mode = document.getElementById("mode-select").value;
-            document.getElementById("menu").classList.add("hidden");
-            document.getElementById("game-ui").classList.remove("hidden");
-            document.getElementById("mode-display").innerText = mode === "duo" ? "Mod: Çift (Bot Yanında)" : "Mod: Tek";
+            document.getElementById("skin-screen").classList.add("hidden");
+            document.getElementById("game-screen").classList.remove("hidden");
+            document.getElementById("mode-label").innerText = duoMode ? "Çift Hesaplaşma" : "Tek Hesaplaşma";
             
-            if(mode === "duo") {
-                let bot = document.createElement("div");
-                bot.className = "bot-friend";
-                bot.innerHTML = "🐾"; // Chat Noir Bot
-                bot.style.left = (playerX + 40) + "px";
-                bot.style.top = playerY + "px";
-                document.getElementById("game-container").appendChild(bot);
+            let p = document.getElementById("player");
+            p.innerText = selectedSkinIcon;
+
+            if(duoMode) {
+                botObj = document.createElement("div");
+                botObj.className = "entity";
+                botObj.innerHTML = "🐾"; // Chat Noir Bot
+                botObj.style.left = (playerX + 45) + "px";
+                botObj.style.top = playerY + "px";
+                document.getElementById("game-container").appendChild(botObj);
             }
+
+            // Akumalı yapay zeka hareketi
+            setInterval(updateEnemy, 600);
         }
 
         function move(dir) {
-            if(dir === 'left') playerX -= 15;
-            if(dir === 'right') playerX += 15;
-            if(dir === 'up') playerY -= 15;
-            if(dir === 'down') playerY += 15;
+            if(dir === 'left') playerX -= 18;
+            if(dir === 'right') playerX += 18;
+            if(dir === 'up') playerY -= 18;
+            if(dir === 'down') playerY += 18;
 
-            // Sınırlar
             if(playerX < 0) playerX = 0;
-            if(playerX > 320) playerX = 320;
+            if(playerX > 324) playerX = 324;
             if(playerY < 0) playerY = 0;
-            if(playerY > 460) playerY = 460;
+            if(playerY > 444) playerY = 444;
 
             let p = document.getElementById("player");
             p.style.left = playerX + "px";
             p.style.top = playerY + "px";
 
-            // Çalı kontrolü (Basit koordinat kontrolü)
-            if(playerX > 30 && playerX < 130 && playerY > 40 && playerY < 140) {
-                p.style.opacity = "0.3"; // Çalı içindeyken görünmezlik
+            // Çalı kontrolü (Görünmezlik)
+            if(playerX > 20 && playerX < 120 && playerY > 30 && playerY < 130) {
+                p.style.opacity = "0.3";
                 isHidden = true;
             } else {
                 p.style.opacity = "1";
@@ -183,19 +216,67 @@
         }
 
         function hitBox() {
-            boxHp -= (1 + powerCube);
+            boxHp -= (5 + (powerCube * 2));
             let box = document.getElementById("box1");
             if(boxHp <= 0) {
                 box.remove();
                 powerCube++;
-                document.getElementById("score-display").innerText = "Yük: " + powerCube + " 🔋";
+                document.getElementById("score-display").innerText = `Yük: ${powerCube} 🔋 | Can: ${playerHp} ❤️`;
             } else {
                 box.innerText = boxHp + "HP";
             }
         }
 
         function attack() {
-            alert("Süper güç ve saldırı efekti kullanıldı! Akumalı hedeflere hasar verildi ⚡");
+            let proj = document.createElement("div");
+            proj.className = "projectile";
+            proj.style.left = (playerX + 12) + "px";
+            proj.style.top = (playerY) + "px";
+            document.getElementById("game-container").appendChild(proj);
+
+            let pTimer = setInterval(() => {
+                let t = parseInt(proj.style.top);
+                proj.style.top = (t - 20) + "px";
+
+                // Akumalıyı vurma kontrolü
+                let eDist = Math.abs(parseInt(proj.style.left) - enemyX);
+                let eTop = parseInt(proj.style.top);
+                if(eDist < 30 && eTop < enemyY + 30) {
+                    let enemyEl = document.getElementById("enemy");
+                    enemyEl.style.filter = "brightness(2)";
+                    setTimeout(() => enemyEl.style.filter = "none", 200);
+                    proj.remove();
+                    clearInterval(pTimer);
+                }
+
+                if(t < 0) {
+                    proj.remove();
+                    clearInterval(pTimer);
+                }
+            }, 30);
+        }
+
+        function updateEnemy() {
+            if(isHidden) return; // Çalıdaysak akumalı bizi bulamaz!
+
+            if(enemyX < playerX) enemyX += 10;
+            if(enemyX > playerX) enemyX -= 10;
+            if(enemyY < playerY) enemyY += 10;
+            if(enemyY > playerY) enemyY -= 10;
+
+            let enemyEl = document.getElementById("enemy");
+            enemyEl.style.left = enemyX + "px";
+            enemyEl.style.top = enemyY + "px";
+
+            // Oyuncuya zarar verme
+            if(Math.abs(enemyX - playerX) < 25 && Math.abs(enemyY - playerY) < 25) {
+                playerHp -= 10;
+                document.getElementById("score-display").innerText = `Yük: ${powerCube} 🔋 | Can: ${playerHp} ❤️`;
+                if(playerHp <= 0) {
+                    alert("Yenildin! Tekrar dene.");
+                    location.reload();
+                }
+            }
         }
     </script>
 </body>
